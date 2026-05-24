@@ -1,6 +1,7 @@
 use egui::{Color32, FontFamily, FontId, Rounding, Stroke, Style, TextStyle, Visuals};
 
 // ── Catppuccin Mocha (Hyprdots default) ─────────────────────────────────────
+#[allow(non_snake_case)]
 pub mod C {
     use egui::Color32;
     pub const BASE:     Color32 = Color32::from_rgb(30,  30,  46);
@@ -23,7 +24,6 @@ pub mod C {
     pub const PEACH:    Color32 = Color32::from_rgb(250, 179, 135);
     pub const RED:      Color32 = Color32::from_rgb(243, 139, 168);
     pub const MAUVE:    Color32 = Color32::from_rgb(203, 166, 247);
-    pub const PINK:     Color32 = Color32::from_rgb(245, 194, 231);
 }
 
 pub fn apply_theme(ctx: &egui::Context) {
@@ -41,15 +41,16 @@ pub fn apply_theme(ctx: &egui::Context) {
     }
     ctx.set_fonts(fonts);
 
-    let mut style = Style::default();
-
-    style.text_styles = [
-        (TextStyle::Small,    FontId::new(11.0, FontFamily::Proportional)),
-        (TextStyle::Body,     FontId::new(13.5, FontFamily::Proportional)),
-        (TextStyle::Button,   FontId::new(13.5, FontFamily::Proportional)),
-        (TextStyle::Heading,  FontId::new(17.0, FontFamily::Proportional)),
-        (TextStyle::Monospace,FontId::new(13.0, FontFamily::Monospace)),
-    ].into();
+    let mut style = Style {
+        text_styles: [
+            (TextStyle::Small,    FontId::new(11.0, FontFamily::Proportional)),
+            (TextStyle::Body,     FontId::new(13.5, FontFamily::Proportional)),
+            (TextStyle::Button,   FontId::new(13.5, FontFamily::Proportional)),
+            (TextStyle::Heading,  FontId::new(17.0, FontFamily::Proportional)),
+            (TextStyle::Monospace,FontId::new(13.0, FontFamily::Monospace)),
+        ].into(),
+        ..Default::default()
+    };
 
     style.spacing.item_spacing     = egui::vec2(8.0, 5.0);
     style.spacing.button_padding   = egui::vec2(14.0, 7.0);
@@ -114,7 +115,7 @@ pub fn rate_color(val: &str) -> Color32 {
     });
     match first {
         None        => C::TEXT,
-        Some(n) if n == 0.0      => C::OVERLAY1,
+        Some(0.0)                => C::OVERLAY1,
         Some(n) if n <= 5.0      => C::GREEN,
         Some(n) if n <= 15.0     => C::YELLOW,
         Some(n) if n <= 30.0     => C::PEACH,

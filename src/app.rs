@@ -107,7 +107,7 @@ impl BtApp {
                 g.rows.push(e);
             } else {
                 groups.push(Group {
-                    code4:   code4,
+                    code4,
                     chapter: e.chapter.clone(),
                     header:  None,
                     rows:    vec![e],
@@ -267,14 +267,13 @@ impl BtApp {
                     .min_size(Vec2::new(100.0, 32.0)),
             ).clicked() { fire = true; }
 
-            if !self.query.is_empty() {
-                if ui.add(
+            if !self.query.is_empty()
+                && ui.add(
                     egui::Button::new(egui::RichText::new("✕").size(13.0).color(C::SUBTEXT0))
                         .fill(C::SURFACE0)
                         .rounding(Rounding::same(8.0))
                         .min_size(Vec2::splat(32.0)),
                 ).clicked() { self.clear(); }
-            }
         });
         fire
     }
@@ -544,9 +543,9 @@ impl BtApp {
 // ── Group helpers ─────────────────────────────────────────────────────────────
 impl Group<'_> {
     fn chapter_num(&self) -> &str {
-        self.chapter.splitn(2, " - ").next().unwrap_or("").trim()
+        self.chapter.split(" - ").next().unwrap_or("").trim()
     }
     fn chapter_name(&self) -> &str {
-        self.chapter.splitn(2, " - ").nth(1).unwrap_or("").trim()
+        self.chapter.split_once(" - ").map(|x| x.1).unwrap_or("").trim()
     }
 }

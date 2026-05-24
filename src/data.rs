@@ -54,14 +54,6 @@ impl HsEntry {
     pub fn is_group_header(&self) -> bool {
         self.level == "0" || self.digits().len() == 4
     }
-
-    pub fn chapter_num(&self) -> &str {
-        self.chapter.splitn(2, " - ").next().unwrap_or("").trim()
-    }
-
-    pub fn chapter_name(&self) -> &str {
-        self.chapter.splitn(2, " - ").nth(1).unwrap_or("").trim()
-    }
 }
 
 use rusqlite::{params, Connection, Result};
@@ -133,10 +125,7 @@ pub fn search_db(conn: &Connection, q: &str) -> Vec<HsEntry> {
     } else {
         let q_norm = normalize(q);
         let words: Vec<&str> = q_norm.split_whitespace().collect();
-        let mut conditions = Vec::new();
-        for _ in &words {
-            conditions.push("(vn_norm LIKE ? OR en_norm LIKE ?)");
-        }
+        let conditions = vec!["(vn_norm LIKE ? OR en_norm LIKE ?)"; words.len()];
         let cond_str = conditions.join(" AND ");
         let sql = format!("{} WHERE {} ORDER BY id ASC", query_str, cond_str);
         stmt = conn.prepare(&sql).unwrap();
